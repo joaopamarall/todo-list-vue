@@ -20,10 +20,18 @@ export default {
 		NewTask,
 		TasksProgressVue
 	},
-
 	data() {
 		return {
 			tasks: []
+		}
+	},
+	watch: {
+		tasks: {
+			deep: true, 
+			handler() {
+
+				localStorage.setItem('tasks', JSON.stringify(this.tasks))
+			}
 		}
 	},
 	computed: {
@@ -50,6 +58,11 @@ export default {
 			const i  = this.tasks.indexOf(task)
 			this.tasks[i].pending = !this.tasks[i].pending
 		}
+	},
+	created() {
+		const json = localStorage.getItem('tasks')
+		const array = JSON.parse(json)
+		this.tasks = Array.isArray(array) ? array : [];
 	}
 }
 </script>
