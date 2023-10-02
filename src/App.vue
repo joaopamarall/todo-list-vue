@@ -1,8 +1,9 @@
 <template>
 	<div id="app">
 		<h1>To do list</h1>
-		<NewTask @taskAdded="addTask"/>
-		<TaskGrid :tasks="tasks"
+		<tasks-progress-vue :progress="progress"/>
+		<new-task @taskAdded="addTask"/>
+		<task-grid :tasks="tasks"
 			@taskDeleted="deleteTask"
 			@taskStateChanged="toggleTaskState" /> 
 	</div>
@@ -11,16 +12,25 @@
 <script>
 import TaskGrid from './components/TaskGrid.vue';
 import NewTask from './components/NewTask.vue';
+import TasksProgressVue from './components/TasksProgress.vue';
 
 export default {
 	components: {
 		TaskGrid,
-		NewTask
+		NewTask,
+		TasksProgressVue
 	},
 
 	data() {
 		return {
 			tasks: []
+		}
+	},
+	computed: {
+		progress() {
+			const total = this.tasks.length
+			const done = this.tasks.filter(t => !t.pending).length
+			return Math.round(done / total * 100) || 0
 		}
 	},
 	methods: {
